@@ -29,9 +29,9 @@ public class JWTService: IJWTService
 
         var token = new JwtSecurityToken(
             issuer: _jwtOptions.Issuer,
-            audience: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_jwtOptions.ExpiresIn),
+            expires: DateTime.UtcNow.AddMinutes(_jwtOptions.ExpiresMinutes),
             signingCredentials: creds
             );
         return new JwtSecurityTokenHandler().WriteToken(token);

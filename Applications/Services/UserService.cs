@@ -41,7 +41,8 @@ public class UserService: IUserService
             return null;
         }
 
-        if (!_passwordHasher.VerifyHashedPassword(password, user.PasswordHash))
+        var ok =_passwordHasher.VerifyHashedPassword(password, user.PasswordHash);
+        if (!ok)
         {
             return null;
         }

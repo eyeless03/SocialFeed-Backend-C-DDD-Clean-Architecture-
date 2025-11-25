@@ -4,7 +4,7 @@ namespace WebApplication3.Infrastructure;
 
 public class PasswordHasher: IPasswordHasher
 {
-    public PasswordHash HashPassword(string password) => new PasswordHash(BCrypt.Net.BCrypt.EnhancedHashPassword(password));
+    public PasswordHash HashPassword(string password) => new PasswordHash(BCrypt.Net.BCrypt.HashPassword(password));
 
     public bool VerifyHashedPassword(string password,PasswordHash passwordHash)
     {
