@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication3.WebRequests;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Web.Controllers;
 [Authorize]
@@ -19,14 +20,16 @@ public class PostsController : ControllerBase
     }
 
     [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> CreatePostAsync([FromBody] CreatePostRequest request)
     {
         var title = new PostText(request.Title);
-        var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
         if (userIdClaim == null)
         {
             return Unauthorized("User not found");
         }
+
         var authorId = UserId.From(Guid.Parse(userIdClaim.Value));
         var id = await _postService.CreatePostAsync(title, authorId);
         return Ok(new 
@@ -36,6 +39,7 @@ public class PostsController : ControllerBase
             Id = id.Value
         });
     }
+
 
     [HttpPost("{postId}/like")]
     public async Task<IActionResult> AddLikeToPostAsync(Guid postId)
@@ -64,6 +68,16 @@ public class PostsController : ControllerBase
         var userIdVO = UserId.From(Guid.Parse(userIdClaim.Value));
         await _postService.RemoveLikeFromPostAsync(postIdVO, userIdVO);
         return NoContent();
+    }
+    [HttpGet("me")]
+    public IActionResult Me()
+    {
+        return Ok(new
+        {
+            IsAuthenticated = User.Identity?.IsAuthenticated,
+            Name = User.Identity?.Name,
+            Claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList()
+        });
     }
 
     [HttpPost("{postId}/dislike")]

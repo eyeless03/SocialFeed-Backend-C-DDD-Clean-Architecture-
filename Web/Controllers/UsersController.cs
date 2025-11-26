@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApplication3.WebRequests;
 using Applications.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers;
 

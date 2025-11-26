@@ -4,12 +4,6 @@ namespace Domains.Entities;
 
 public class Post
 {
-    private readonly HashSet<UserId> _likedUsers = new();
-    private readonly HashSet<UserId> _dislikedUsers = new();
-    public IReadOnlyCollection<UserId> LikedUsers => _likedUsers;
-    public IReadOnlyCollection<UserId> DislikedUsers => _dislikedUsers;
-    public long LikesCount => LikedUsers.Count;
-    public long DislikesCount => DislikedUsers.Count;
     private PostId _id;
     private PostText _title;
     public PostText Title => _title;
@@ -18,6 +12,12 @@ public class Post
     public UserId AuthorId => _authorId;
     private readonly List<Comment> _comments = new();
     public IReadOnlyCollection<Comment> Comments => _comments;
+    private readonly HashSet<UserId> _likedUsers = new();
+    private readonly HashSet<UserId> _dislikedUsers = new();
+    public IReadOnlyCollection<UserId> LikedUsers => _likedUsers;
+    public IReadOnlyCollection<UserId> DislikedUsers => _dislikedUsers;
+    public long LikesCount => LikedUsers.Count;
+    public long DislikesCount => DislikedUsers.Count;
     public void AddLike(UserId userId)
     {
         if (_likedUsers.Contains(userId))
@@ -52,7 +52,7 @@ public class Post
     public void RemoveDislikeFromComment(CommentId commentId, UserId userId)
     {
         var comment = _comments.FirstOrDefault(c => c.Id == commentId);
-        if (comment == null)return;
+        if (comment == null) return;
         comment.RemoveDislike(userId);
     }
     
